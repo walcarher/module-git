@@ -1,0 +1,401 @@
+#misplelling
+alias car='cat '
+alias gbd='gdb '
+
+#debugger
+alias gdba='gdb --arg '
+alias vtune='/opt/intel/vtune_amplifier_xe_2013/bin64/amplxe-gui'
+
+#make
+alias make3='make -j 3'
+alias make5='make -j 5'
+
+#tar manipulation
+alias untarbz2='tar -jxvf'
+alias untargz='tar -zxvf'
+alias untar_help='echo "tar -jcvf votre_archive.tar.bz2 votre_dossier/
+tar -jxvf votre_archive.tar.bz2"'
+
+function extract () {
+   if [ -f $1 ] ; then
+       case $1 in
+           *.tar.bz2)   tar xvjf $1 && cd $(echo $1 | sed 's/.tar.bz2//')    ;;
+           *.tar.gz)    tar xvzf $1 && cd $(echo $1 | sed 's/.tar.gz//')    ;;
+           *.tar.lzma)    tar xvJf $1 && cd $(echo $1 | sed 's/.tar.lzma//')    ;;
+           *.bz2)       bunzip2 $1 && cd $(echo $1 | sed 's/.bz2//')    ;;
+           *.rar)       unrar x $1 && cd $(echo $1 | sed 's/.rar//')    ;;
+           *.gz)        gunzip $1 && cd $(echo $1 | sed 's/.gz//')    ;;
+           *.tar)       tar xvf $1 && cd $(echo $1 | sed 's/.tar//')    ;;
+           *.tbz2)      tar xvjf $1 && cd $(echo $1 | sed 's/.tbz2//')    ;;
+           *.tgz)       tar xvzf $1 && cd $(echo $1 | sed 's/.tgz//')    ;;
+           *.zip)       unzip $1 && cd $(echo $1 | sed 's/.zip//')    ;;
+           *.Z)         uncompress $1 && cd $(echo $1 | sed 's/.Z//')    ;;
+           *.7z)        7z x $1 && cd $(echo $1 | sed 's/.7z//')    ;;
+           *)           echo "don't know how to extract '$1'..." ;;
+       esac
+   else
+       echo "'$1' is not a valid file!"
+   fi
+ }
+
+function compress () {
+#   if [ -f $2 ] ; then
+       case $1 in
+           *.tar.bz2)   tar cvjf $1 $2 ;;
+           *.tar.gz)    tar cvzf $1 $2 ;;
+           *.tar.lzma)    tar cvJf $1 $2 ;;
+           *.bz2)       bzip2 $1 $2 ;;
+           *.rar)       rar a $1 $2 ;;
+           *.gz)        gzip $1 $2 ;;
+           *.tar)       tar cvf $1 $2 ;;
+           *.tbz2)      tar cvjf $1 $2 ;;
+           *.tgz)       tar cvzf $1 $2 ;;
+           *.zip)       zip -r $1 $2 ;;
+#           *.Z)         uncompress $1 $2 ;;
+           *.7z)        7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on $1 $2 ;;
+	   help|-h|--help) echo "Available format: tar.[bz2,gz,lzma] bz2 gz tar tbz2 tgz zip rar" ;;
+           *)           echo "don't know how to compress '$1'..." ;;
+       esac
+#   else
+#       echo "'$1' is not a valid file!"
+#   fi
+ }
+
+#folder navigation
+alias cd..='cd ..'
+alias cd...='cd ../..'
+alias cd....='cd ../../../'
+alias na='nautilus .'
+
+#list files
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias lh='ll -h'
+alias lS='lh -S -r'
+
+#reset and clear terminal
+alias r='reset && clear '
+
+#search part of files
+alias g='grep -rsn '
+alias gi='g -i '
+
+#search files
+alias f='find . -iname '
+
+#math
+alias calculette='echo "Calculette :" && bc -q -l'
+alias c='calculette '
+alias calc='calculette '
+
+#text editor
+alias e='emacs '
+alias enw='e -nw '
+alias ee='enw '
+
+#player
+alias mp='mplayer '
+alias i='rhythmbox-client --print-playing '
+alias play='rhythmbox-client --play '
+alias pause='rhythmbox-client --pause '
+alias previous='rhythmbox-client --previous '
+alias next='rhythmbox-client --next '
+alias p='rhythmbox-client --play-pause && i'
+alias n='next && i'
+alias eq='rhythmbox-client --enqueue '
+alias cq='rhythmbox-client --clear-queue '
+alias v+='rhythmbox-client --volume-up '
+alias v-='rhythmbox-client --volume-down '
+alias v='rhythmbox-client --set-volume '
+alias v+2='v+ && v+ '
+alias v+3='v+2 && v+ '
+alias v-2='v- && v- '
+alias v-3='v-2 && v- '
+
+#shortcut
+alias py='python '
+alias matlab='~/DATA/Matlab_Install/bin/matlab'
+alias arduide='arduino-ide'
+
+#software
+alias up='sudo apt-get update'
+alias ug='sudo apt-get upgrade'
+alias maj='up && ug'
+alias inst='sudo apt-get install '
+alias search='apt-cache search '
+alias show='apt-cache show '
+
+#help
+alias concatpdf_help='echo "pdftk file1.pdf file2.pdf cat output file.pdf"'
+alias for_help='echo "for i in *.m ;do mv "\${i}" "\${i%.m}.h"; done"'
+
+#bash modification
+alias bashrc='e ~/.bashrc && source ~/.bashrc '
+alias aliases='e ~/.bash_aliases && source ~/.bashrc '
+alias sourcebashrc='source ~/.bashrc'
+
+#other
+function title()
+{
+   wmctrl -r :ACTIVE: -N "$@"
+}
+
+#ssh
+alias sshx='ssh -X '
+alias sshy='ssh -Y '
+
+#files synchronization
+alias sync='rsync -avz --delete '
+
+#IP
+alias publicIP='curl ifconfig.me/ip'
+alias infoIP='curl ipinfo.io'
+
+#network
+alias reseau='sudo dhclient -r && sudo dhclient'
+alias restartapache='sudo service apache2 restart '
+
+function restart_wifi()
+{
+  sudo rmmod -f iwlwifi 
+  sudo rfkill unblock all
+  sudo modprobe iwlwifi
+  rfkill list
+}
+
+#convert files
+alias ppt2pdf='soffice --invisible --nologo --convert-to pdf '
+alias doc2pdf='soffice --invisible --nologo --convert-to pdf '
+
+#mp3 length
+function mp3Length()
+{
+    find . -type f -iname '*.mp3' -exec vbrfix {} {} \;
+}
+
+#List video file from flash
+function listvideo()
+{
+    local folder_name=/proc/`ps aux | grep flash | awk '{print $2}' | head -1`/fd
+    echo "${folder_name}"
+    ll ${folder_name} | grep deleted |  awk '{print $9}'
+}
+
+#Read video file from flash
+function readvideo()
+{
+    local folder_name=/proc/`ps aux | grep flash | awk '{print $2}' | head -1`/fd
+    if [ $# = 0 ] 
+    then
+	local file_name=`ll ${folder_name} | grep deleted | head -1 |  awk '{print $9}'`
+    else
+	local file_name=`ll ${folder_name} | grep deleted | head -n $1 | tail -n 1 |  awk '{print $9}'`
+    fi
+    mp "${folder_name}/${file_name}"
+}
+
+#Save video file from flash
+function getvideo()
+{
+    local folder_name=/proc/`ps aux | grep flash | awk '{print $2}' | head -1`/fd
+    if [ $# = 0 ] 
+    then
+	local file_name=`ll ${folder_name} | grep deleted | head -1 |  awk '{print $9}'`
+    else
+	local file_name=`ll ${folder_name} | grep deleted | head -n $1 | tail -n 1 |  awk '{print $9}'`
+    fi
+    cp "${folder_name}/${file_name}" ~/Vidéos/Video.flv
+}
+
+#Grep file 'i' mean case unsensitive
+function gihcpp(){
+    gi $* `f "*.h" && f "*.hpp" && f "*.cpp" && f "*.cc" && f "*.c"`
+}
+
+function gicpp(){
+    gi $* `f "*.cpp" && f "*.cc" && f "*.c"`
+}
+
+function gih(){
+    gi $* `f "*.h" && f "*.hpp"`
+}
+
+function ghcpp(){
+    g $* `f "*.h" && f "*.hpp" && f "*.cpp" && f "*.cc" && f "*.c"`
+}
+
+function gcpp(){
+    g $* `f "*.cpp" && f "*.cc" && f "*.c"`
+}
+
+function gh(){
+    g $* `f "*.h" && f "*.hpp"`
+}
+
+#Translate with wordreference or google translate
+function fren(){
+    if test $# = 1
+    then firefox http://www.wordreference.com/fren/$1 &
+    else firefox "http://translate.google.fr/#fr|en|$*" &
+    fi
+}
+
+function enfr(){
+    if test $# = 1
+    then firefox http://www.wordreference.com/enfr/$1 &
+    else firefox "http://translate.google.fr/#en|fr|$*" &
+    fi
+}
+
+function fres(){
+    if test $# = 1
+    then firefox http://www.wordreference.com/fres/$1 &
+    else firefox "http://translate.google.fr/#fr|es|$*" &
+    fi
+}
+
+function esfr(){
+    if test $# = 1
+    then firefox http://www.wordreference.com/esfr/$1 &
+    else firefox "http://translate.google.fr/#es|fr|$*" &
+    fi
+}
+
+#French dico
+function dico(){
+firefox "http://www.cnrtl.fr/definition/$1" &
+}
+
+function synonyme(){
+firefox "http://www.crisco.unicaen.fr/des/synonymes/$1" &
+}
+
+function synonyme_en(){
+firefox "http://dictionnaire.reverso.net/anglais-synonymes/$1" &
+}
+
+#Open Wikipedia FR
+function wiki() {
+firefox "http://fr.wikipedia.org/w/index.php?title=Spécial%3ARecherche&search=$1" &
+}
+
+#Open Wikipedia EN
+function wikien(){
+    firefox "http://en.wikipedia.org/w/index.php?title=Special%3ASearch&search=$1" &
+}
+
+#Create and go inside a folder
+function mk() {
+mkdir -p $1 && cd $1
+}
+
+#Replace text by an other one
+function remplacer(){
+sed -i 's/$1/$2/g' $3
+}
+
+#Record desktop or window
+alias rec_help='echo "Usage: rec [window_id]" && echo "Use Ctrl+C to stop. Use xwininfo to get the window id"'
+function rec() {
+    if [ $# = 0 ] 
+    then
+	echo "Record desktop"
+	recordmydesktop --no-cursor --no-sound
+    fi
+    if [ $# = 1 ] 
+    then
+	echo "Record window"
+	recordmydesktop --no-cursor --no-sound --windowid=$1
+    fi
+    if [ $# > 1 ]
+    then
+	echo "Too much arguments"
+    fi
+}
+
+alias get_window_id='xwininfo | grep "id:"'
+
+#Restart firefox
+function firefox-restart(){
+    killall firefox
+    killall firefox-bin
+    echo "Firefox is restarting..."
+    firefox &
+}
+
+#Create video from images
+alias createvideo_help='echo "createvideo [fps] [output] [input ext] [codec]" && echo "mencoder "mf://*.jpg" -mf w=1024:h=768:fps=10:type=jpg -ovc copy -nosound -o movie.avi"'
+function createvideo(){
+    if [ $# = 0 ] 
+    then
+       	mencoder "mf://*.jpg" -mf w=1024:h=768:fps=10:type=jpg -ovc copy -nosound -o movie.avi
+    fi
+    if [ $# = 1 ] 
+    then
+	mencoder "mf://*.jpg" -mf w=1024:h=768:fps=$1:type=jpg -ovc copy -nosound -o movie.avi
+    fi   
+    if [ $# = 2 ] 
+    then
+	mencoder "mf://*.jpg" -mf w=1024:h=768:fps=$1:type=jpg -ovc copy -nosound -o $2
+    fi   
+    if [ $# = 3 ] 
+    then
+	mencoder "mf://*.$3" -mf w=1024:h=768:fps=$1:type=$3 -ovc copy -nosound -o $2
+    fi  
+    if [ $# = 4 ] 
+    then
+	mencoder "mf://*.$3" -mf w=1024:h=768:fps=$1:type=$3 -ovc $4 -nosound -o $2
+    fi
+}
+
+#Extract images from video
+alias extractfromvideo_help='echo "extractfromvideo <input> <frame rate> <output>    #output sample = image-%3d.jpeg"'
+function extractfromvideo(){
+    if [ $# != 3 ] 
+    then
+	echo "ffmpeg -i inputfile.avi -r 10 -sameq image-%3d.jpeg"
+      	echo "extractfromvideo <input_file> <frame_rate> <output_name>"
+    else
+	ffmpeg -i $1 -r $2 -sameq $3
+    fi
+}
+
+#Compile bibtex and tex
+function texpdf(){
+    pdflatex $1
+    bibtex ${1/tex/aux}
+    pdflatex $1
+    pdflatex $1
+}
+
+#Git function
+function git-list-large-files(){
+git rev-list master | while read rev; do git ls-tree -lr $rev | cut -c54- | grep -v '^ '; done | sort -u | perl -e '
+  while (<>) {
+    chomp;
+    @stuff=split("\t");
+    $sums{$stuff[1]} += $stuff[0];
+  }
+  print "$sums{$_} $_\n" for (keys %sums);
+' | sort -rn
+}
+
+
+#Completion
+#function make-completion-wrapper () {
+#        local alias_name="$1"
+#        local arg_count=$(($#-3))
+#        local function_name="$2"
+#        shift 2
+#        local function="
+#	      function $function_name {
+#              ((COMP_CWORD+=$arg_count))
+#              COMP_WORDS=( "$@" \${COMP_WORDS[@]:1} )
+#              "$comp_function_name"
+#              return 0}"
+#        eval "$function"
+#}
+##sample
+#eval make-completion-wrapper _apt_get _inst apt-get install
+#eval complete -F _inst inst

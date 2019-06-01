@@ -1,0 +1,223 @@
+\documentclass[a4paper,oneside]{article}
+
+\usepackage[frenchb]{babel}
+\usepackage[utf8]{inputenc}  
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{float}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{latexsym}
+\usepackage{amssymb}
+
+\definecolor{dgreen}{RGB}{0,125,0}
+
+\usepackage{geometry}
+\geometry{left=3cm,right=3cm,top=3cm,bottom=2cm}
+
+\title{\huge Memo CMake}
+\author{L\'eo \textsc{Baudouin}}
+\date{}
+
+\begin{document}
+
+{\Huge Memo CMake}
+%----------------------------------------------------------------------
+\newline
+
+\noindent Pour plus d'informations, contactez moi à l'adresse : 
+\href{mailto:baudouin.leo@gmail.com}{\nolinkurl{baudouin.leo@gmail.com}}.
+
+\section{Aide en ligne}
+
+\url{https://cmake.org/cmake/help/v3.8/}
+
+%----------------------------------------------------------------------
+
+\section{Fonctions de base}
+\begin{itemize}
+\item Mettre des commentaires :\\
+  \textcolor{blue}{\verb?\#Commentaire ?}
+\item Affiche un message lors de l'appel à CMake :\\
+  \textcolor{blue}{\verb?MESSAGE([FATAL\_ERROR|WARNING|...] "message") ?}
+\item Définir la version minimale de CMake :\\
+  \textcolor{blue}{\verb?CMAKE\_MINIMUM\_REQUIRED(VERSION 2.6)?}
+\end{itemize}
+
+\subsection{Utiliser les variables}
+\begin{itemize}
+\item Définir une variable :\\
+  \textcolor{blue}{\verb?SET(variable\_name "value")?}
+\item Récupérer la valeur d'une variable :\\
+  \textcolor{blue}{\verb?\$\{variable\_name\}?}
+\item Créer des options :\\
+  \textcolor{blue}{\verb?OPTION(variable\_name "Description" default\_value)?}
+\item Lister les fichiers d'un dossier :\\
+  \textcolor{blue}{\verb?FILE(GLOB variable pattern)?}\\
+  Exemple : \verb?FILE(GLOB SRCS src/*.cpp)?
+\end{itemize}
+
+\subsection{Utiliser les cibles}
+\begin{itemize}
+\item Ajouter un exécutable :\\
+  \textcolor{blue}{\verb?ADD\_EXECUTABLE( exec\_name sources )?}
+\item Ajouter une bibliothèque :\\
+  \textcolor{blue}{\verb?ADD\_LIBRARY( lib\_name [static|shared] sources )?}
+\item Linker une cible avec une bibliothèque :\\
+  \textcolor{blue}{\verb?TARGET\_LINK\_LIBRARIES( exec\_name libraries )?}%\linebreak
+  %Exemple : \textcolor{blue}{\verb?TARGET\_LINK\_LIBRARIES( MyExecutable \$\{PROJECT\_NAME\})?}
+\item Ajoute des dépendances entre les cibles :\\
+  \textcolor{blue}{\verb?ADD\_DEPENDENCIES ?}
+\item Ajouter une cible personnalisée :\\
+  \textcolor{blue}{\verb?ADD\_CUSTOM\_TARGET ?}\\
+  Exemple :
+\begin{verbatim}
+  ADD_CUSTOM_TARGET(Name [ALL] [command1 [args1...]]
+  [COMMAND command2 [args2...] ...]
+  [DEPENDS depend depend depend ... ]
+  [WORKING_DIRECTORY dir]
+  [COMMENT comment] [VERBATIM]
+  [SOURCES src1 [src2...]]
+  )
+\end{verbatim}
+\end{itemize}
+
+\subsection{Utiliser des bibliothèques}
+\begin{itemize}
+\item Chercher un package :\\
+  \textcolor{blue}{\verb?FIND\_PACKAGE( package\_name [version] [REQUIRED] ) ?}\\
+  Initialise habituellement les variables :
+  \begin{itemize}
+  \item \textcolor{blue}{\verb?package\_name\_FOUND ?}
+  \item \textcolor{blue}{\verb?package\_name\_INCLUDE\_DIRS ?}
+  \item \textcolor{blue}{\verb?package\_name\_LIBRARY ?}
+  \item \textcolor{blue}{\verb?package\_name\_LIBRARY\_DIRS ?}
+  \end{itemize}
+\item Utiliser un dossier contenant des bibliothèques :\\
+  \textcolor{blue}{\verb?LINK\_DIRECTORIES( folder )?}
+\item Ajouter un dossier à la liste des dossiers à inclure :\\
+  \textcolor{blue}{\verb?INCLUDE\_DIRECTORIES( folder ) ?}
+\end{itemize}
+
+\subsection{Autre}
+\begin{itemize}
+\item Installer un fichier :\\
+  \textcolor{blue}{\verb?INSTALL?}\\
+  Exemple :
+\begin{verbatim}
+  INSTALL(FILES my_file
+  DESTINATION output_folder
+  PERMISSIONS OWNER_READ GROUP_READ WORLD_READ OWNER_WRITE
+  )
+\end{verbatim}
+\item Remplacer les variables par leurs valeurs dans un fichier :\\
+  \textcolor{blue}{\verb?CONFIGURE\_FILE(input\_file output\_file)?}\\
+  On utilise généralement des fichiers ".in"
+\item Ajouter une définition :\\
+  \textcolor{blue}{\verb?ADD\_DEFINITION( "-DUSE\_MYLIB" )?}\\
+  Vous pouvez utiliser dans votre code C/C++ :\\
+  \textcolor{dgreen}{\verb?\#ifdef USE\_MYLIB ?}
+\item Exécuter une commande personnalisée :\\
+  \textcolor{blue}{\verb?ADD\_CUSTOM\_COMMAND ?}\\
+  Exemple :
+\begin{verbatim}
+  ADD_CUSTOM_COMMAND(OUTPUT output1 [output2 ...]
+  COMMAND command1 [ARGS] [args1...]
+  [COMMAND command2 [ARGS] [args2...] ...]
+  [MAIN_DEPENDENCY depend]
+  [DEPENDS [depends...]]
+  [IMPLICIT_DEPENDS <lang1> depend1 ...]
+  [WORKING_DIRECTORY dir]
+  [COMMENT comment] [VERBATIM] [APPEND]
+  )
+\end{verbatim}
+\item Exécuter un programme externe :\\
+  \textcolor{blue}{\verb?EXEC\_PROGRAM ?}\\
+  Exemple :
+\begin{verbatim}
+  EXEC_PROGRAM(Executable [directory in which to run]
+  [ARGS <arguments to executable>]
+  [OUTPUT_VARIABLE <var>]
+  [RETURN_VALUE <var>]
+  )
+\end{verbatim}
+\end{itemize}
+
+\subsection{Test unitaires}
+\begin{itemize}
+\item Active les tests unitaires :\\
+  \textcolor{blue}{\verb?ENABLE\_TESTING()?}
+\item Ajouter un test unitaire :\\
+  \textcolor{blue}{\verb?ADD\_TEST( test\_name exec\_name [arguments])?}\\
+  Nécessite d'appeler une fois la fonction \textcolor{blue}{\verb?ENABLE\_TESTING()?}
+\end{itemize}
+
+\section{Variables de base}
+\begin{itemize}
+\item Définir le projet :\\
+  \textcolor{blue}{\verb?SET(PROJECT\_NAME name)?}\\
+  \textcolor{blue}{\verb?SET(PROJECT\_DESCRIPTION "")?}\\
+  \textcolor{blue}{\verb?SET(PROJECT\_URL "")?}\\
+  \textcolor{blue}{\verb?SET(PROJECT\_VERSION "0.0.1")?}\\
+  \textcolor{blue}{\verb?SET(PROJECT\_REQUIREMENTS "")?}
+\item Dossier contenant le premier CMakeLists.txt :\\
+  \textcolor{blue}{\verb?CMAKE\_SOURCE\_DIR ?}
+\item Dossier contenant le CMakeLists.txt courant :\\
+  \textcolor{blue}{\verb?CMAKE\_CURRENT\_SOURCE\_DIR ?}
+\item Dossier contenant le projet courant :\\
+  \textcolor{blue}{\verb?PROJECT\_SOURCE\_DIR  ?}
+\item Dossier de sortie du premier CMakeLists.txt :\\
+  \textcolor{blue}{\verb?CMAKE\_BINARY\_DIR ?}
+\item Dossier de sortie du CMakeLists.txt courant :\\
+  \textcolor{blue}{\verb?CMAKE\_CURRENT\_BINARY\_DIR ?}
+\item Dossier de sortie du projet courant :\\
+  \textcolor{blue}{\verb?PROJECT\_BINARY\_DIR ?}
+\item Dossier d'installation :\\
+  \textcolor{blue}{\verb?CMAKE\_INSTALL\_PREFIX ?}
+\item Liste des dossiers pour FIND\_PATH() :\\
+  \textcolor{blue}{\verb?CMAKE\_INCLUDE\_PATH ?}
+\item Liste des dossiers pour FIND\_LIBRARY() :\\
+  \textcolor{blue}{\verb?CMAKE\_LIBRARY\_PATH ?}
+\item Liste des dossiers pour FIND\_PACKAGE(), FIND\_PATH(), FIND\_PROGRAM() et FIND\_LIBRARY() :\\
+  \textcolor{blue}{\verb?CMAKE\_PREFIX\_PATH ?}
+\item Options de compilation :\\
+  \textcolor{blue}{\verb?CMAKE\_CXX\_FLAGS ?},
+  \textcolor{blue}{\verb?CMAKE\_CXX\_FLAGS\_DEBUG ?},
+  \textcolor{blue}{\verb?CMAKE\_CXX\_FLAGS\_RELEASE ?}
+\item Choisir le compilateur :\\
+  \textcolor{blue}{\verb?CMAKE\_CXX\_COMPILER?}
+\item Compiler les bibliothèques en mode dynamique :\\
+  \textcolor{blue}{\verb?SET(BUILD\_SHARED\_LIBS ON)?}
+\item Définir le dossier de sortie des exécutables :\\
+  \textcolor{blue}{\verb?RUNTIME\_OUTPUT\_DIRECTORY?}
+\item Définir le dossier de sortie des bibliothèques :\\
+  \textcolor{blue}{\verb?LIBRARY\_OUTPUT\_DIRECTORY?}
+\end{itemize}
+
+\section{Programmation}
+\subsection{Fonction IF}
+\begin{verbatim}
+
+  SET( number 4 )
+  IF( number GREATER 10 )
+    MESSAGE( "The number ${number} is too large." )
+  ELSE()
+    MESSAGE( "The number ${number} is ok." )
+  ENDIF()
+
+  SET( x )
+  IF(DEFINED x)
+    MESSAGE("This will never be printed")
+  ENDIF()
+\end{verbatim}
+
+\subsection{Fonction FOREACH}
+\begin{verbatim}
+  foreach(func ${funcs})
+    set(func_name test_${func})
+    eval("${func_name}(\"Test\")")
+  endforeach(func)
+\end{verbatim}
+
+\end{document}

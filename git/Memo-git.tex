@@ -1,0 +1,183 @@
+\documentclass[a4paper,oneside,twocolumn]{article}
+
+\usepackage[frenchb]{babel}
+\usepackage[utf8]{inputenc}  
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{float}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{picins}
+
+\usepackage{geometry}
+\geometry{left=3cm,right=3cm,top=3cm,bottom=2cm}
+
+\newcommand{\gitcommand}[2]{
+\noindent\verb?#1?\linebreak
+#2}
+
+
+\begin{document}
+\begin{center}
+	\huge Memo - Git
+\end{center}
+
+%----------------------------------------------------------------------
+
+\vspace{-3mm}
+\section{Création}
+\vspace{-2mm}
+
+\noindent\verb?git init?\linebreak
+$\triangleright$ initialise un dépôt local
+
+\noindent\verb?git clone <url>?\linebreak
+$\triangleright$ clone un dépôt existant
+
+\vspace{-3mm}
+\section{Information}
+\vspace{-2mm}
+
+\noindent\verb?git status?\linebreak
+$\triangleright$ initialise un dépôt local
+
+\noindent\verb?git diff [<file>]?\linebreak
+$\triangleright$ affiche les différence entre l'espace de travail et la zone indexée
+
+\noindent\verb?git diff --cached [<file>]?\linebreak
+$\triangleright$ affiche les différence entre la zone indexée et le dépôt local
+
+\noindent\verb?git diff <commit> [<file>]?\linebreak
+$\triangleright$ affiche les différence entre l'espace de travail et le dernier commit
+
+\noindent\verb?git log -p [<file>]?\linebreak
+$\triangleright$ affiche l'historique avec les diff
+
+\noindent\verb?git blame <file>?\linebreak
+$\triangleright$ affiche les dernière modifications et auteurs ligne par ligne
+
+\vspace{-3mm}
+\section{Branche}
+\vspace{-2mm}
+
+\noindent\verb?git checkout <branch>?\linebreak
+$\triangleright$ bascule l'espace de travail sur une branche
+
+\noindent\verb?git checkout -b <new branch>?\linebreak
+$\triangleright$ crée et bascule sur une nouvelle branche
+
+\noindent\verb?git branch -d <old branch>?\linebreak
+$\triangleright$ supprime l'ancienne branche, -r pour supprimer sur le serveur en même temps
+
+\noindent\verb?git merge <branch>?\linebreak
+$\triangleright$ fusionne la branche spécifiée dans la branche courante
+
+\vspace{-3mm}
+\section{Remisage}
+\vspace{-2mm}
+
+\noindent\verb?git stash save <mesage>?\linebreak
+$\triangleright$ remise les modifications de l'espace de travail et fait \emph{reset}
+
+\noindent\verb?git stash pop?\linebreak
+$\triangleright$ dépile les modifications de la remise sans l'espace de travail
+
+\noindent\verb?git stash list?\linebreak
+$\triangleright$ list de contenu de la remise
+
+\vspace{-3mm}
+\section{Zone indexée}
+\vspace{-2mm}
+
+\noindent\verb?git add <file>?\linebreak
+$\triangleright$ ajoute un fichier à la zone indexée
+
+%\noindent\verb?git add -p?\linebreak
+%$\triangleright$ ajoute de manière interactive  les modifications de l'espace de travail
+
+\noindent\verb?git reset <file>?\linebreak
+$\triangleright$ enlève le fichier de la zone indexée
+
+
+\vspace{-3mm}
+\section{Commit}
+\vspace{-2mm}
+
+\noindent\verb?git commit?\linebreak
+$\triangleright$ valide la zone indexée dans le dépôt local
+
+%\noindent\verb?git commit -p?\linebreak
+%$\triangleright$ valide de manière interactive les modifications de l'espace de travail
+
+\noindent\verb?git reset --hard?\linebreak
+$\triangleright$ remet l'espace de travail ainsi que la zone indexée das l'état du dépôt et donc efface les modifications non commitées
+
+\noindent\verb?git revert <commit>?\linebreak
+$\triangleright$ applique les modification inverse au commit sélectionné
+
+\noindent\verb?git cherry-pick <commit> ?\linebreak
+$\triangleright$ applique un commit sur une autre branche
+
+\vspace{-3mm}
+\section{Dépôt distant}
+\vspace{-2mm}
+
+\noindent\verb?git remote add <remote> <url>?\linebreak
+$\triangleright$ ajoute un dépôt distant nommé <remote>
+
+\noindent\verb?git fetch <remote>?\linebreak
+$\triangleright$ synchronise avec un dépôt distant% et ses références locales
+
+\noindent\verb?git pull <remote> <branch>?\linebreak
+$\triangleright$ récupère une branche du dépôt distant et la fusionne dans la branche courante
+
+\noindent\verb?git pull --rebase <remote> <branch>?\linebreak
+$\triangleright$ idem mais en rebasant la branche courante au lieu de fusionner
+
+\noindent\verb?git push <remote> <branch>?\linebreak
+$\triangleright$ envoie les commits de la branche sur le dépôt distant
+
+\noindent\verb?git push <remote> <local_branch>:<remote_branch>?\linebreak
+$\triangleright$ envoie la branche locale vers la branche distante
+
+\noindent\verb?git push <remote>:<old_branch>?\linebreak
+$\triangleright$ supprime la branche du dépôt distant
+
+\noindent\verb?git push --tags?\linebreak
+$\triangleright$ envoie les tags vers le dépôt distant
+
+\vspace{-3mm}
+\section{Rebase}
+\vspace{-2mm}
+
+\noindent\verb?git rebase master?\linebreak
+$\triangleright$ se place au dernier commit de la branche master et ré-applique les commits de la branche courante
+
+\noindent\verb?git rebase -i HEAD~3?\linebreak
+$\triangleright$ liste les 3 derniers commits avant de les ré-appliquer, permettant de les modifier
+
+\noindent\verb?git rebase --abort?\linebreak
+$\triangleright$ annule le rebase en cours
+
+
+\vspace{-3mm}
+\section{Tag}
+\vspace{-2mm}
+
+\noindent\verb?git tag?\linebreak
+$\triangleright$ liste les tags du dépôt local
+
+\noindent\verb?git tag <new_tag>?\linebreak
+$\triangleright$ crée un tag sur le dernier commit
+
+\vspace{-3mm}
+\section{Aide}
+\vspace{-2mm}
+
+\noindent\verb?man git-<command>?\linebreak
+$\triangleright$ Aide sur la commande \emph{command}
+
+\end{document}

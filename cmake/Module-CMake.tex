@@ -1,0 +1,487 @@
+\documentclass{beamer}
+%\usetheme{Madrid}
+%\usetheme{Boadilla}
+%\usetheme{default}
+%\usetheme{Warsaw}
+%\usetheme{Bergen}
+%\usetheme{Frankfurt}
+\usetheme{Darmstadt}
+
+%\usecolortheme{seahorse}
+%\usecolortheme{beaver}
+\setbeamercolor{normal text}{fg=white}
+\setbeamertemplate{background canvas}[vertical shading] [top=black!95,bottom=black!65]
+
+\definecolor{mypurple}{RGB}{207,78,64}
+\usecolortheme[named=mypurple]{structure}
+
+\definecolor{myorange}{RGB}{255,235,190}
+\beamerboxesdeclarecolorscheme{orange}{orange}{myorange}
+
+
+%\definecolor{commandcolor}{RGB}{11,95,65}
+\definecolor{commandcolor}{RGB}{111,195,165}
+
+\setbeamertemplate{footline}[page number]
+%\setbeamercovered{transparent}
+\setbeamercovered{invisible}
+\setbeamertemplate{navigation symbols}{}
+
+%\usepackage{musixtex}
+\usepackage{multimedia}
+\usepackage{graphicx}
+\usepackage[utf8x]{inputenc}
+%\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel} 
+%\usepackage[all]{xy}
+%\usepackage{multirow}
+%\usepackage{lmodern}
+\usepackage{subfigure}
+%\usepackage{ulem}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{xspace}
+\usepackage{color}
+%\usepackage{xcolor}
+\usepackage{rotating}
+\usepackage{multicol}
+\usepackage{fancyvrb}
+\usepackage{listings}
+
+\definecolor{mypurple}{RGB}{207,78,64}
+\usecolortheme[named=mypurple]{structure}
+
+\definecolor{myorange}{RGB}{255,235,190}
+\beamerboxesdeclarecolorscheme{orange}{orange}{myorange}
+
+\definecolor{myorange}{RGB}{255,235,190}
+
+
+\lstset{
+    %frame=tb, % draw a frame at the top and bottom of the code block
+    tabsize=4, % tab space width
+    showstringspaces=false, % don't mark spaces in strings
+    numbers=left, % display line numbers on the left
+    commentstyle=\color{green}, % comment color
+    keywordstyle=\color{myorange}, % keyword color
+    stringstyle=\color{mypurple} % string color
+}
+
+
+\definecolor{dgreen}{RGB}{0,125,0}
+
+
+\usepackage{tikz}
+\usetikzlibrary{trees}
+
+\setbeamertemplate{caption}[numbered] 
+
+\newcommand{\setframetitle}[1]{\begin{center}
+    \huge \textbf{#1}
+\end{center}}
+
+%% --------------
+
+\title{CMake}
+\subtitle{Atelier d'aide à la programmation}
+\author{L\'eo \textsc{Baudouin}}
+\institute{
+  {\url{baudouin.leo @ gmail.com}}
+}
+\date{03-04 juin 2019}
+
+%% --------------
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Makefile}
+\subsection{}
+
+\begin{frame}[fragile]{Télécharger les exemples}
+  \begin{block}{Cloner le dép\^ot suivant}
+    \url{https://github.com/lbaudouin/module-cmake.git}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Exemple 1 : Création d'un \textit{Hello World} en C++}
+
+  \begin{block}{Fichier : \textbf{hello.cpp}}
+  \begin{lstlisting}[language=C++]
+#include <iostream>
+int main()
+{
+  std::cout << "Hello world !" << std::endl;
+  return 0;
+}
+\end{lstlisting}
+  \end{block}
+  \pause
+
+  \begin{block}{Compiler et lancer le programme}
+    \textcolor{commandcolor}{\verb?g++ hello.cpp -o hello?}\linebreak
+    \textcolor{commandcolor}{\verb?./hello?}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Exemple 2 : Le Makefile}
+  Permet de compiler automatiquement en faisant \textbf{make}
+
+  \begin{exampleblock}{Template d'un Makefile}
+  \begin{lstlisting}[language=make]
+cible: dependances
+  commandes
+\end{lstlisting}
+  \end{exampleblock}
+  \pause
+
+  \begin{block}{Fichier : \textbf{Makefile}}
+  \begin{lstlisting}[language=make]
+hello: main.c hello.c
+  gcc -o hello hello.c main.c
+\end{lstlisting}
+  \end{block}
+  \pause
+
+  \begin{block}{Compiler et lancer le programme}
+    \textcolor{commandcolor}{\verb?make?}\linebreak
+    \textcolor{commandcolor}{\verb?./hello?}
+  \end{block}
+  
+\end{frame}
+
+\begin{frame}[fragile]{Exemple 3 : Le Makefile}
+
+  \begin{block}{Fichier : \textbf{Makefile}}
+  \begin{lstlisting}[language=make]
+hello: hello.o main.o
+  gcc -o hello hello.o main.o
+
+hello.o: hello.c
+  gcc -o hello.o -c hello.c -Wall
+
+main.o: main.c hello.h
+  gcc -o main.o -c main.c -Wall
+
+clean:
+  rm -rf *.o
+\end{lstlisting}
+  \end{block}
+  
+\end{frame}
+
+\begin{frame}[fragile]{Exemple 4 : Le Makefile avancé}
+
+  \begin{block}{Fichier : \textbf{Makefile}}
+  \begin{lstlisting}[language=make]
+CC = gcc
+CFLAGS = -W -Wall
+
+all: hello.o main.o
+  $(CC) -o hello $^
+
+%.o: %.c
+  $(CC) -c $< -o $@ $(CFLAGS)
+
+clean:
+  rm -rf *.o
+\end{lstlisting}
+  \end{block}
+  
+\end{frame}
+
+
+\begin{frame}[fragile]{Exemple 5 : CMake}
+
+  \begin{block}{Fichier : \textbf{CMakeLists.txt}}
+  \begin{lstlisting}[language=make]
+ADD_EXECUTABLE(hello main.c hello.c)
+\end{lstlisting}
+  \end{block}
+  
+  \begin{block}{Compiler et lancer le programme}
+    \textcolor{commandcolor}{\verb?mkdir build \&\& cd build?}\linebreak
+    \textcolor{commandcolor}{\verb?cmake ..?}\linebreak
+    \textcolor{commandcolor}{\verb?make?}\linebreak
+    \textcolor{commandcolor}{\verb?./hello?}
+  \end{block}
+
+  \begin{exampleblock}{A voir}
+    Ouvrir le fichier Makefile généré
+  \end{exampleblock}
+
+\end{frame}
+
+
+\begin{frame}[fragile]{Astuce}
+  \begin{block}{CMake}
+    \begin{itemize}
+    \item Utilisation d'un dossier de \textbf{build}
+    \item Utilisation des variables : \verb?cmake -DCMAKE_BUILD_TYPE=Release ..?
+
+    \item Gestion des variables/options avec \textbf{ccmake} ou \textbf{cmake-gui}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Make}
+    \begin{itemize}
+    \item Utiliser plusieurs threads : \verb?make -j 5?
+    \item Forcer la recompilation : \verb?make -B?
+    \item Passer les erreurs : \verb? make -k?
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{CMake pour un projet complexe}
+\subsection{}
+
+\begin{frame}[fragile]{Utilisation de CMake}
+
+  \begin{block}{Cloner le dép\^ot suivant}
+    \url{https://gitlab.com/lbaudouin/empty_library.git}
+  \end{block}
+
+  \begin{exampleblock}{Objectif}
+    Générer le fichier \textit{CMakeLists.txt} pour le projet
+  \end{exampleblock}
+
+\end{frame}
+
+\begin{frame}[fragile]{Arborescence}
+  \begin{scriptsize}
+\begin{verbatim}
+|-- bin                        
+|   |-- CMakeLists.txt       < Règles de compilations des binaires
+|   |-- main.cpp             < Source d'un binaire
+|-- CMakeLists.txt           < Règles générales
+|-- doc                      
+|   |-- doc.tag              < Fichier de documentation
+|   |-- Doxyfile.in          < Règle de la documentation
+|   |-- style.css            < Style pour la documentation
+|-- include                  
+|   |-- my_class.h           < Fichiers includes
+|-- LibraryConfig.cmake.in   < Fichier de configuration pour cmake
+|-- Library.pc.in            < Fichier de configuration pour pkg-config
+|-- LICENSE                  < Licence du projet
+|-- README                   < Aide pour l'utilisateur
+|-- src
+|   |-- my_class.cpp         < Sources du projet        
+|-- unitTesting              < Tests unitaires
+    |-- CMakeLists.txt       < Règles de compilations des tests unitaires
+    |-- TestPass.cpp         < Test unitaire pour une seule fonctionnalité
+\end{verbatim}
+  \end{scriptsize}
+\end{frame}
+
+\begin{frame}{Compilation}
+  \begin{exampleblock}{Réaliser les étapes suivantes :}
+    \begin{enumerate}
+    \item \verb?mkdir build; cd build?
+    \item \verb?cmake ..?
+    \item \verb?make \&\& make install? 
+    \end{enumerate}
+  \end{exampleblock}
+  \pause
+  \begin{exampleblock}{}
+    \begin{enumerate}
+      \setcounter{enumi}{4}
+    \item \verb?ccmake ..?
+    \item Modifier les options suivantes :\\ \begin{scriptsize}(BUILD\_TEST, CMAKE\_BUILD\_TYPE,  CMAKE\_INSTALL\_PREFIX)\end{scriptsize}
+    \item \verb?make install?
+    \item \verb?make test?
+    \end{enumerate}
+  \end{exampleblock}
+  \pause
+  \begin{exampleblock}{}
+    \begin{enumerate}
+      \setcounter{enumi}{8}
+    \item \verb?make doc?
+    \end{enumerate}
+  \end{exampleblock}
+\end{frame}
+
+\section{Création du CMakeLists.txt}
+\subsection{}
+\begin{frame}{Création du CMakeLists.txt}
+  \begin{exampleblock}{Objectifs}
+    \begin{itemize}
+    \item Compiler une bibliothèque (library)
+    \item Compiler des binaires
+    \item Compiler des tests unitaires
+    \end{itemize}
+  \end{exampleblock}
+  \pause
+  \begin{exampleblock}{}
+    \begin{itemize}
+    \item Installer la bibliothèque et les binaires
+    \item Installer les fichiers de configuration
+    \item Générer la documentation
+    \item Ajouter des options de compilation
+    \end{itemize}
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Fonctions}
+  \begin{block}{Généralités}
+    \begin{itemize}
+    \item Mettre des commentaires :\linebreak
+      \textcolor{cyan}{\verb?\#Commentaire ?}
+    \item Version minimal de CMake :\linebreak
+      \textcolor{cyan}{\verb?CMAKE\_MINIMUM\_REQUIRED(VERSION 2.6)?}
+    \item Définir un projet :\linebreak
+      \textcolor{cyan}{\verb?PROJECT(project\_name)?}
+    \item Définir une variable :\linebreak
+      \textcolor{cyan}{\verb?SET(variable\_name "value")?}
+    \item Récupérer la valeur d'une variable :\linebreak
+      \textcolor{cyan}{\verb?\$\{variable\_name\}?}
+    \item Créer des options :\linebreak
+      \textcolor{cyan}{\verb?OPTION(variable\_name "Description" default\_value)?}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Consignes}
+
+  \begin{exampleblock}{Créer un projet}
+    \begin{itemize}
+    \item Cloner le dépôt 
+    \url{https://github.com/lbaudouin/cmake-demo.git}
+    \item Définir la version minimal de cmake (ici 2.6)
+	\item Définir un nouveau projet \og module \fg
+    \end{itemize}
+  \end{exampleblock}
+
+\end{frame}
+
+%OPTION(BUILD_SHARED_LIBRARY "Build the shared library." TRUE)
+%OPTION(INSTALL_BINARIES "Install binaries." FALSE)
+%OPTION(ENABLE_TEST "Enable test" FALSE)
+
+\begin{frame}[fragile]{Fonctions}
+  \begin{block}{Créer des cibles}
+    \begin{itemize}
+    \item Ajouter un exécutable :\linebreak
+      \textcolor{cyan}{\verb?ADD\_EXECUTABLE( exec\_name sources )?}
+    \item Ajouter une bibliothèque :\linebreak
+      \textcolor{cyan}{\verb?ADD\_LIBRARY( lib\_name [static|shared] sources )?}
+    \item Linker une cible avec une bibliothèque :\linebreak
+      \textcolor{cyan}{\verb?TARGET\_LINK\_LIBRARIES( exec\_name libraries )?}%\linebreak
+      %Exemple : \textcolor{cyan}{\verb?TARGET\_LINK\_LIBRARIES( MyExecutable \$\{PROJECT\_NAME\})?}
+    \item Utiliser un dossier contenant des bibliothèques :\linebreak
+      \textcolor{cyan}{\verb?LINK\_DIRECTORIES( folder )?}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Sous-dossier}
+    \begin{itemize}
+    \item Inclure un sous-dossier :\linebreak
+      \textcolor{cyan}{\verb?ADD\_SUBDIRECTORY( folder )?}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Consignes}
+  \begin{exampleblock}{Créer les cibles}
+    \begin{itemize}
+    \item Ajouter les sources à une variable en utilisant la fonction FILE
+    \item Créer la bibliothèque
+    \item Créer le binaire \og demo \fg
+    \item Créer les tests unitaires
+    \end{itemize}
+  \end{exampleblock}
+\end{frame}
+
+\subsection{Chercher une bibliothèque}
+\begin{frame}[fragile]{Fonctions}
+  \begin{block}{Utiliser une bibliothèque}
+    \begin{itemize}
+    \item Chercher une bibliothèque :\linebreak
+      \textcolor{cyan}{\verb?FIND\_PACKAGE(package\_name [version] [EXACT] [REQUIRED])?}\\
+      Cherche les fichiers :\\
+      \begin{itemize}
+      \item \verb?package_nameConfig.cmake ?
+      \item \verb?package_name-config.cmake ?
+      \end{itemize}
+    \item Savoir si la bibliothèque a été trouvée :\linebreak
+      \textcolor{cyan}{\verb?package\_name\_FOUND?}
+    \item Ajouter des dossier d'includes :\linebreak
+      \textcolor{cyan}{\verb?include\_directories( <directory> )?}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Fonctions}
+  \begin{block}{Utiliser une bibliothèque}
+    \begin{itemize}
+    \item \verb?XXX_FOUND? :\\
+      Passe à TRUE si la bibliothèque XXX a été trouvée
+    \item \verb?XXX_YYY_FOUND? :\\
+      Passe à TRUE si le composant YYY de XXX a été trouvé
+    \item \verb?XXX_INCLUDE_DIRS? :\\
+      Liste les dossiers d'include
+    \item \verb?XXX_LIBRARIES? :\\
+      Liste les fichiers contenant les bibliothèques (chemin complet)
+    \item \verb?XXX_LIBRARY_DIRS? : (Optionnel)\\
+      Liste les dossiers contenant les bibliothèques
+    \item \verb?XXX_DEFINITIONS? :\\
+      Liste les définitions pour la bibliothèque
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%XXX_FIND_VERSION       = full requested version string
+%XXX_FIND_VERSION_MAJOR = major version if requested, else 0
+%XXX_FIND_VERSION_MINOR = minor version if requested, else 0
+%XXX_FIND_VERSION_PATCH = patch version if requested, else 0
+%XXX_FIND_VERSION_TWEAK = tweak version if requested, else 0
+%XXX_FIND_VERSION_COUNT = number of version components, 0 to 4
+%XXX_FIND_VERSION_EXACT = true if EXACT option was given
+
+\begin{frame}[fragile]{Fonctions}
+  \begin{block}{Utiliser une bibliothèque avec un fichier .pc}
+\begin{verbatim}
+  SET(XXX_FOUND FALSE)
+  FIND_PACKAGE(PkgConfig REQUIRED)
+  IF(PKG_CONFIG_FOUND)
+    PKG_CHECK_MODULES(XXX REQUIRED xxx>=1.8.0)
+  ENDIF()
+
+  IF(XXX_FOUND)
+    MESSAGE("XXX found")
+  ELSE()
+    MESSAGE("XXX>=1.8.0 not found")
+  ENDIF()
+\end{verbatim}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Consignes}
+  \begin{exampleblock}{Générer la doc}
+    \begin{itemize}
+    \item Chercher le package \textbf{Doxygen} avec \verb?FIND\_PACKAGE ?
+    \item Tester si Doxygen a été trouvé
+    \item Configurer le fichier \verb?\$\{CMAKE\_SOURCE\_DIR\}/doc/Doxyfile.in? et le sortir dans \verb?\$\{PROJECT\_BINARY\_DIR\}/doc/Doxyfile?
+    \item Créer une cible personnalisée "doc" exécutant \verb?\$\{DOXYGEN\_EXECUTABLE\}?
+    \end{itemize}
+  \end{exampleblock}
+\end{frame}
+
+%-------------------------------------------------------------------
+
+\end{document} 
+
+%-------------------------------------------------------------------
+
+%\transdissolve[duration=0.25]
+%
+%\begin{exampleblock}{Avantages}
+%\end{exampleblock}
+%
+%\begin{alertblock}{Inconvénients}
+%\end{alertblock}

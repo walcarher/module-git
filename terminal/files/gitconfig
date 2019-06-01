@@ -1,0 +1,17 @@
+[user]
+	name = Léo Baudouin
+	email = leo.baudouin@univ-bpclermont.fr
+[alias]
+	st = status
+	co = commit
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+	ui = true
+[url "git@git.univ-bpclermont.fr:"]
+	insteadOf = univ:
+[core]
+	excludesfile = ~/.gitignore
+	editor = emacs

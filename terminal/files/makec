@@ -1,0 +1,23 @@
+#!/bin/sh
+
+#cd "${prefix:?}/src"
+
+status=$( (
+	(make -j$(grep -c processor /proc/cpuinfo) "$@" 2>&1 || echo $? >&3) |
+	(perl -ne '
+		next if m{^-- Up-to-date:};
+		if(m{^-- Installing: (.*)}){next if -d $1}
+		s{$}{\e[m};
+		s{^}{\e[32m} if m{\bBuilding\s}i;
+		s{^}{\e[31m} if m{\berror:}i;
+		s{^}{\e[33m} if m{\bwarning:}i;
+		s{^}{\e[34m} if m{\bnote:}i;
+		s{^}{\e[31m} if m{\berreur:}i;
+		s{^}{\e[33m} if m{\battention:}i;
+		s{^}{\e[33m} if m{\battention :}i;
+		s{^}{\e[35m} if m{\bundefined reference to}i;
+		s{^}{\e[1m} if s{(:\s)}{$1\e[21m};
+		print' || echo $? >&3)
+) 3>&1 1>&4) 4>&1
+
+! [ "$status" ]

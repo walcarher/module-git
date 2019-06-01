@@ -1,0 +1,125 @@
+\documentclass{beamer}
+
+\input{../style.tex}
+
+%% --------------
+
+\title{Gitlab}
+\subtitle{Atelier d'aide à la programmation}
+\author{L\'eo \textsc{Baudouin}}
+\institute{
+  {\url{baudouin.leo @ gmail.com}}
+}
+\date{03-04 juin 2019}
+
+%% --------------
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Introduction}
+\subsection{}
+
+\begin{frame}{Définition}
+
+
+\begin{center}
+\includegraphics[width=0.5\linewidth]{images/gitlab-logo}
+\end{center}
+
+\begin{block}{Wikipedia}
+{\it 
+«~GitLab est un logiciel libre de forge basée sur git proposant les fonctionnalités de wiki, un système de suivi des bugs, l’intégration continue et la livraison continue....}
+\end{block}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Gitlab}
+
+\begin{block}{Online}
+\href{https://gitlab.com}{https://gitlab.com}
+\end{block}
+
+\begin{block}{Installation locale}
+\scriptsize
+\begin{verbatim}
+docker run -d --name gitlab --restart always gitlab/gitlab-ce:latest
+\end{verbatim}
+\end{block}
+
+
+\end{frame}
+
+
+
+\section{Intégration Continue}
+\begin{frame}[fragile]{Intégration Continue}
+
+\begin{block}{.gitlab-ci.yml}
+\begin{verbatim}
+image: lbaudouin/latex
+
+build:
+  script:
+    - latexmk -pdf
+  artifacts:
+    paths:
+      - "*.pdf"
+    expire_in: 2 year
+\end{verbatim}
+\end{block}
+
+Résultat:
+\footnotesize
+\href{https://gitlab.com/lbaudouin/cv/-/jobs/artifacts/master/raw/cv-lbaudouin.pdf?job=build}{https://gitlab.com/\textbf{user}/\textbf{project}/-/jobs/artifacts/master/raw/\textbf{file}?job=\textbf{job}}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]{CI}
+\begin{block}{Pipeline}
+\begin{center}
+\includegraphics[width=1.0\linewidth]{images/ci-stages}
+\end{center}
+\end{block}
+\end{frame}
+
+
+
+
+\begin{frame}[fragile]{CI}
+
+\begin{block}{.gitlab-ci.yml}
+\scriptsize
+\begin{verbatim}
+build:
+  stage: build
+  script: make build
+
+test:unit:
+  stage: test
+  script: make test-unit
+
+test:functional:
+  stage: test
+  script: make test-functional
+
+deploy:
+  stage: deploy
+  script: make deploy
+\end{verbatim}
+\end{block}
+\end{frame}
+
+
+
+
+
+%-------------------------------------------------------------------
+
+\end{document} 

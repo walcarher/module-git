@@ -1,0 +1,536 @@
+\documentclass{beamer}
+
+\input{../style.tex}
+
+%% --------------
+
+\title{Git}
+\subtitle{Atelier d'aide à la programmation}
+\author{L\'eo \textsc{Baudouin}}
+\institute{
+  {\url{baudouin.leo @ gmail.com}}
+}
+\date{03-04 juin 2019}
+
+%% --------------
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Introduction}
+
+\subsection{}
+\begin{frame}[label=git]
+  \frametitle{Logiciel de suivi de version}
+  \begin{columns}
+    \begin{column}{0.2\linewidth}
+      \begin{figure}
+	\includegraphics[width=0.95\linewidth]{images/git-logo}  
+      \end{figure}
+    \end{column}
+    \begin{column}{0.8\linewidth}  
+      \textit{\textbf{Git} est un logiciel de gestion de versions décentralisé. C'est un logiciel libre créé par \textbf{Linus Torvalds}, créateur du noyau Linux, et distribué selon les termes de la licence publique générale GNU version 2.}
+    \end{column}
+  \end{columns}
+  
+  \begin{figure}
+    \includegraphics<2>[width=0.95\linewidth]{images/github}  
+  \end{figure}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Git}
+
+    \begin{figure}
+    \includegraphics[height=0.7\textheight]{images/qgit}
+    \end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Git}
+
+    \begin{figure}
+    \includegraphics[height=0.7\textheight]{images/branches}
+    \end{figure}
+
+\end{frame}
+
+
+\subsection{}
+
+\begin{frame}{Installation}
+
+  \begin{block}{Linux}
+    Ubuntu : \textcolor{commandcolor}{\verb?sudo apt-get install git?}\linebreak
+    Debian : \textcolor{commandcolor}{\verb?aptitude install git?}\linebreak
+    Fedora : \textcolor{commandcolor}{\verb?yum install git-core?}
+  \end{block}
+
+  \begin{block}{Mac}
+    \begin{scriptsize}
+      \textcolor{commandcolor}{\verb?sudo port install git-core +svn +doc +bash\_completion +gitweb?}
+    \end{scriptsize}
+  \end{block}
+
+  \begin{block}{Windows}
+    Voir : \url{http://git-scm.com/download/win}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}{Création d'un compte}
+
+  \begin{block}{Sites web}
+    \begin{itemize}
+    \item \url{https://gitlab.com/}
+    \item \url{https://github.com/}
+    \item \url{https://bitbucket.org/}
+    \item \url{http://forge.clermont-universite.fr/}
+    \item \dots
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Générer une clef SSH}
+    \textcolor{commandcolor}{\verb?ssh-keygen?}\linebreak
+    \textcolor{commandcolor}{\verb?cat .ssh/id\_rsa.pub ?}
+  \end{block}
+
+\end{frame}
+
+
+\begin{frame}{Configuration de Git}
+
+  \begin{block}{Nom et adresse}
+    \textcolor{commandcolor}{\verb?git config --global user.name "John Doe"?}\linebreak
+    \textcolor{commandcolor}{\verb?git config --global user.email johndoe@example.com?}
+  \end{block}
+
+  \begin{block}{Couleurs}
+    \textcolor{commandcolor}{\verb?git config --global color.ui true?}
+  \end{block}
+
+  \begin{block}{Alias}
+    \textcolor{commandcolor}{\verb?git config --global alias.st status?}
+  \end{block}
+
+  \begin{block}{Fichiers à ignorer}
+    \textcolor{commandcolor}{\verb?git config --global core.excludesfile \~{}/.gitignore?}
+  \end{block}
+
+  Voir le fichier : $\sim$\verb?/.gitconfig?
+
+\end{frame}
+
+\begin{frame}{Configuration de Git}
+
+  \begin{block}{Editeur de texte par défaut}
+    \textit{Vi} est par défaut, pour le remplacer par \textit{emacs} :\linebreak
+    \textcolor{commandcolor}{\verb?git config --global core.editor emacs?}
+  \end{block}
+  
+  \begin{block}{Personnaliser les couleurs}
+    \textcolor{commandcolor}{\verb?git config --global color.diff.meta "blue black bold"?}
+  \end{block}
+  
+  \begin{block}{Auto-correction des erreurs de frappe}
+    \textcolor{commandcolor}{\verb?git config --global help.autocorrect 1?}
+  \end{block}
+  
+\end{frame}
+
+
+\begin{frame}{Git UI}
+
+  \begin{block}{Logiciels utiles}
+  \begin{columns}
+    \begin{column}{0.48\textwidth}
+    \begin{itemize}
+    \item \textbf{gitkraken}
+    \item gitg
+    \item qgit
+    \item gitk
+    \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+    \begin{itemize}
+    \item git gui
+    \item git-cola
+    \item tortoise-git
+    \item \dots
+    \end{itemize}
+    \end{column}
+  \end{columns}
+  
+    
+  \end{block}
+  \includegraphics[width=1\linewidth]{images/gitg}  
+
+\end{frame}
+
+\begin{frame}[fragile]{Gitkraken}
+
+  \begin{block}{Installation}
+ \textcolor{commandcolor}{\verb?sudo snap install gitkraken?}
+  \end{block}
+  \includegraphics[width=1\linewidth]{images/gitkraken}  
+
+\end{frame}
+
+
+\section{Fonctions principales de Git}
+\subsection{}
+
+\begin{frame}[fragile]{Débuter un projet}
+
+  \begin{block}{Depuis un projet existant}
+    \textcolor{commandcolor}{\verb?git clone git@adresse:projet/depot.git?}\linebreak
+    Existe en https :\linebreak
+    \textcolor{commandcolor}{\verb?git clone https://adresse/projet/depot.git?}
+  \end{block}
+  \begin{block}{Nouveau projet}
+    \textcolor{commandcolor}{\verb?cd mon\_projet ?}\linebreak
+    Initialiser le dossier :\\
+    \textcolor{commandcolor}{\verb?git init?}\linebreak
+    Faire le lien avec le serveur :\\
+    \textcolor{commandcolor}{\verb?git remote add origin git@adresse:projet/depot.git?}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Exercice}
+  
+  
+  \begin{exampleblock}{Créer votre premier dépôt}
+    Associer votre clef SSH publique à votre compte Github.\linebreak
+    Sur Github, créer un projet "module-git".% puis le cloner :\linebreak
+    %\begin{small}
+    %\textcolor{commandcolor}{\verb?git clone git@github.com:.../module.git ?}
+    %\end{small}
+  \end{exampleblock}
+  
+  \begin{exampleblock}{Cloner votre premier dépôt}
+    \begin{small}
+      Ouvrir un nouveau terminal :\linebreak
+      \textcolor{commandcolor}{\verb?cd Documents/ ?}\linebreak
+      \textcolor{commandcolor}{\verb?git clone https://github.com/lbaudouin/module-git.git ?}
+    \end{small}
+  \end{exampleblock}
+  
+  \begin{alertblock}{Utilisation du proxy de l'université}
+      \textcolor{commandcolor}{\verb?git config --global http.proxy  http://user:password@sciproxy.sciences.lan:60158?}
+  \end{alertblock}
+  
+\end{frame}
+
+\begin{frame}[fragile]{Pour info : contenu du dossier .git}
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+      \includegraphics[width=0.95\linewidth]{images/tree}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{scriptsize}
+        \begin{itemize}
+        \item[config] : fichier relatif à la configuration de l'environnement Git, comme par exemple des informations sur le développeur (son nom, son email ...)
+        \item[description] : contient les informations sur votre projet
+        \item[objects/] : c'est dans ce répertoire que sont stockés tous les objets Git (commits, tags, trees, blobs)
+        \item[ref/*] : contient les informations sur les branches locales du repository
+        \item[logs/*] : contient les messages de logs
+        \item[index] : fichier contenant des informations sur l'état du prochain commit
+        \item[HEAD] : Pointeur sur la branche actuelle
+        \item[hooks/] : Dossier contenant des "hooks" ou "triggers", c'est à dire des actions/scripts pouvant être exécutés en pre ou post condition
+        \end{itemize}
+      \end{scriptsize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Ajouter et envoyer un fichier}
+  \begin{block}{Créer un nouveau fichier}
+    \textcolor{commandcolor}{\verb?echo "Mon projet" > README?}
+  \end{block}
+
+  \begin{block}{Ajouter le fichier à la liste des fichiers suivis}
+    \textcolor{commandcolor}{\verb?git add README?}
+  \end{block}
+
+  \begin{block}{Créer un commit avec les fichiers modifiés}
+    \textcolor{commandcolor}{\verb?git commit -m "Création du fichier README"?}
+  \end{block}
+
+  \begin{block}{Envoyer le commit sur le serveur}
+    \textcolor{commandcolor}{\verb?git push?}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Récupérer les modifications}
+  \begin{block}{Récupérer les modifications sur le serveur}
+    \textcolor{commandcolor}{\verb?git pull?}
+  \end{block}
+  \begin{block}{Explication}
+    \textcolor{commandcolor}{\verb?git pull = git fetch + git merge?}\footnote{On peut remplacer \textcolor{commandcolor}{\verb?git merge?} par \textcolor{commandcolor}{\verb?git rebase?} (voir explication dans la suite) avec \textcolor{commandcolor}{\verb?git pull --rebase?}  ou de façon permanente avec \textcolor{commandcolor}{\verb?git config --global pull.rebase true?}}\linebreak
+    \textcolor{commandcolor}{\verb?git fetch?} : Récupère les données sur serveur\linebreak
+    \textcolor{commandcolor}{\verb?git merge?} : Fusionne avec le dép\^ot local    
+  \end{block}
+\end{frame}
+
+
+\begin{frame}[fragile]{Exercice}
+  \begin{exampleblock}{Créer et modifier un dépôt}
+    Créer un dépôt sur un des sites\linebreak
+    \textcolor{commandcolor}{\verb?mkdir <dossier\_du\_projet>?}\linebreak
+    \textcolor{commandcolor}{\verb?cd <dossier\_du\_projet> ?}\linebreak
+    \textcolor{commandcolor}{\verb?git init?}\linebreak
+    \textcolor{commandcolor}{\verb?git remote add origin git@github.com:<depot>.git?}\linebreak
+    \linebreak
+    \textcolor{commandcolor}{\verb?git add <fichiers>?}\linebreak
+    \textcolor{commandcolor}{\verb?git commit -m "<Description>"?}\linebreak
+    \textcolor{commandcolor}{\verb?git push?}
+  \end{exampleblock}
+\end{frame}
+
+
+\begin{frame}[fragile]{Voir les modifications}
+  \begin{block}{Liste des fichiers locaux modifiés}
+    \textcolor{commandcolor}{\verb?git status?}
+  \end{block}
+  \begin{block}{Liste des modifications apportées}
+    \textcolor{commandcolor}{\verb?git diff?}\linebreak
+    \textcolor{commandcolor}{\verb?git diff <mon\_du\_fichier>?}\linebreak
+    \textcolor{commandcolor}{\verb?git diff <commit1> <commit2>?}
+  \end{block}
+  \begin{block}{Afficher les logs}
+    \textcolor{commandcolor}{\verb?git log [--stat] [-<n>]?}
+  \end{block}
+  \begin{block}{Modifications ligne par ligne}
+    \textcolor{commandcolor}{\verb?git blame <nom\_du\_fichier>?}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Exercice}
+  \begin{exampleblock}{Modifier le dépôt d'un autre étudiant}
+    Ajouter un étudiant en tant que collaborateur sur le serveur en utilisant l'interface web.\linebreak
+    Etudiant 1:\linebreak
+    \textcolor{commandcolor}{\verb?git clone git@adresse:depot.git?}\linebreak
+    \linebreak
+    \textcolor{commandcolor}{\verb?git add <fichiers>?}\linebreak
+    \textcolor{commandcolor}{\verb?git commit -m "Description"?}\linebreak
+    \textcolor{commandcolor}{\verb?git push?}\linebreak
+    \linebreak
+    Etudiant 2:\linebreak
+    \textcolor{commandcolor}{\verb?git pull?}\linebreak
+    \textcolor{commandcolor}{\verb?git log?}
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Gestion des conflits}
+  \begin{block}{Visualiser les conflits}
+\begin{verbatim}
+  <<<<<<<<<<<<<
+  V1
+  =============
+  V2
+  >>>>>>>>>>>>>
+\end{verbatim}
+  \end{block}
+
+  \begin{block}{Mettre à jour les fichiers}
+    \textcolor{commandcolor}{\verb?git add <nom\_du\_fichier\_en\_conflit>?}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Exercice}
+  \begin{exampleblock}{Gestion des conflits}
+    Etudiant 1 \& 2 :\linebreak
+    \textcolor{commandcolor}{\verb?git pull?}\linebreak
+    \linebreak
+    Etudiant 1:\linebreak
+    Modifier un fichier\linebreak
+    \textcolor{commandcolor}{\verb?git add <fichier>?}\linebreak
+    \textcolor{commandcolor}{\verb?git commit -m "Description"?}\linebreak
+    \textcolor{commandcolor}{\verb?git push?}\linebreak
+    \linebreak
+    Etudiant 2:\linebreak
+    Modifier les mêmes lignes du même fichier\linebreak
+    \textcolor{commandcolor}{\verb?git add <fichier>?}\linebreak
+    \textcolor{commandcolor}{\verb?git commit -m "Description"?}\linebreak
+    \textcolor{commandcolor}{\verb?git push?}
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Tips}
+  \begin{block}{Raccourcis pratiques}
+    \begin{itemize}
+    \item \textcolor{commandcolor}{\verb?git add -u?}\linebreak
+      Ajoute/supprime tout les fichiers suivis modifier/supprimer
+    \item \textcolor{commandcolor}{\verb?git commit -a -m "Description"?}\linebreak
+      \textbf{=} \textcolor{commandcolor}{\verb?git add -u?} \textbf{+} \textcolor{commandcolor}{\verb?git commit -m "Description"?}
+    \item \textcolor{commandcolor}{\verb?git difftool -t <prog> <commit1> <commit2> <file>?}\linebreak
+      Diff avec un programme externe : meld, kompare, \dots
+    \item \textcolor{commandcolor}{\verb?git rm <fichier>?}\linebreak
+      Retire le fichier de la liste des fichiers suivis
+    \end{itemize}
+  \end{block}  
+  
+  \begin{alertblock}{Aide sur git}
+    Pour obtenir de l'aide sur une fonction :\linebreak
+    \textcolor{commandcolor}{\verb?man git-<fonction>?}\linebreak
+    Exemple : 
+    \textcolor{commandcolor}{\verb?man git-commit?}
+  \end{alertblock}
+  
+\end{frame}
+
+\section{Fonctions avancées de Git}
+\subsection{}
+
+\begin{frame}[fragile]{Gestion des branches}
+  \begin{block}{Afficher les branches}
+    \textcolor{commandcolor}{\verb?git branch [-a]?}\linebreak
+    ou \textcolor{commandcolor}{\verb?git show-branch?}
+  \end{block}
+  \begin{block}{Créer une nouvelle branche}
+    \textcolor{commandcolor}{\verb?git branch <ma\_branche> ?}\linebreak
+    ou \textcolor{commandcolor}{\verb?git checkout -b <ma\_branche> ?}
+  \end{block}
+  \begin{block}{Changer de branche}
+    \textcolor{commandcolor}{\verb?git checkout <nom\_de\_la\_branche> ?}
+  \end{block}
+  \begin{block}{Fusionner les branches}
+    \textcolor{commandcolor}{\verb?git checkout <branche\_principale> ?}\linebreak
+    puis \textcolor{commandcolor}{\verb?git merge <branche\_secondaire> ?}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Gestion des branches}
+  \begin{block}{Créer une branche sur le serveur}
+    \textcolor{commandcolor}{\verb?git push <nom\_serveur> <nom\_de\_la\_branche\_locale>?}
+  \end{block}
+  \begin{block}{Forcer l'association d'une branche locale et d'une branche distante}
+    \textcolor{commandcolor}{\verb?git branch -f <br\_locale> <nom\_serveur>/<br\_distante>?}
+  \end{block}
+  \begin{block}{Supprimer une branche locale}
+    \textcolor{commandcolor}{\verb?git branch -d <nom\_de\_la\_branche\_locale>?}
+  \end{block}
+  \begin{block}{Supprimer une branche sur le serveur}
+    \textcolor{commandcolor}{\verb?git push <nom\_serveur> :<nom\_de\_la\_branche\_locale>?}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Exercice}
+  \begin{exampleblock}{Gestion des branches}
+    \begin{itemize}
+    \item Travailler sur une nouvelle banche pendant qu'un autre étudiant travaille sur la branche principale.
+    \item Fusionner la nouvelle branche avec la branche principale
+    \item Regarder le résultat avec gitg
+    \end{itemize}
+    %\textcolor{commandcolor}{\verb?git push?}
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Gestion des tags}
+  \begin{block}{Créer un tag}
+    Après avoir fait le commit :\linebreak
+    \textcolor{commandcolor}{\verb?git tag -a "<nom du tag>" -m "<description du tag>"?}
+  \end{block}
+  \begin{block}{Envoyer le tag}
+    \textcolor{commandcolor}{\verb?git push --tags?}
+  \end{block}
+  \begin{block}{Revenir à un certain tag}
+    \textcolor{commandcolor}{\verb?git checkout "<nom du tag>"?}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Mettre en attente (remiser)}
+  \begin{block}{Mettre en attente des modifications}
+    \textcolor{commandcolor}{\verb?git stash?}
+  \end{block}
+  \begin{block}{Lister les mises en attente}
+    \textcolor{commandcolor}{\verb?git stash list?}
+  \end{block}
+  \begin{block}{Récupérer les modifications en attente}
+    \textcolor{commandcolor}{\verb?git stash pop?}
+  \end{block}
+  \begin{block}{Supprimer les modifications en attente}
+    \textcolor{commandcolor}{\verb?git stash drop?}
+  \end{block}
+  \begin{block}{Créer une branche à partir des modifications en attente}
+    \textcolor{commandcolor}{\verb?git stash branch <nom\_branche> ?}
+  \end{block}
+\end{frame}
+
+\section{Autres}
+\subsection{}
+
+\begin{frame}[fragile]{Autres fonctions}
+  \begin{block}{Modifier le dernier commit (non pushé)}
+    \textcolor{commandcolor}{\verb?git commit --amend?}
+  \end{block}
+  \begin{block}{Debug par recherche dichotomique}
+    \textcolor{commandcolor}{\verb?git bisect?}\newline
+    Voir \textcolor{commandcolor}{\verb?man git-bisect?}
+  \end{block}
+  \begin{block}{Utiliser des sous-modules}
+    Utiliser des dépôts Git dans un dépôt Git, par exemple pour des sous-parties facultatives d'un programme :\linebreak
+    \textcolor{commandcolor}{\verb?git submodule?}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Autres fonctions}
+  \begin{block}{Commandes}
+    \begin{itemize}
+    \item \textcolor{commandcolor}{\verb?git reset?}\linebreak
+      Retourne à un état précédent (option -{}-hard)
+    \item \textcolor{commandcolor}{\verb?git revert?}\linebreak
+      Annule les modifications d'un commit en en générant un nouveau avec les modifications inverses
+    \item \textcolor{commandcolor}{\verb?git rebase?}\linebreak
+      Applique les modifications à la suite au lieu d'effectuer un \textit{merge}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Exercices en lignes}
+  \begin{exampleblock}{Exercices sur Git}
+    \url{http://pcottle.github.io/learnGitBranching/}
+  \end{exampleblock}
+  \begin{block}{Dép\^ot virtuel}
+    \url{http://pcottle.github.io/learnGitBranching/?NODEMO}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Exercice}
+  \begin{exampleblock}{Différence entre \textbf{merge} et \textbf{rebase}}
+    \includegraphics[width=\linewidth]{images/virtual-repo}
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Exercice}
+  \begin{exampleblock}{Différence entre \textbf{merge} et \textbf{rebase}}
+    \begin{center}
+      \includegraphics[width=0.7\linewidth]{images/merge-rebase}  
+    \end{center}
+  \end{exampleblock}
+\end{frame}
+
+
+\begin{frame}[fragile]{Rappel}
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{images/git-all}
+  \end{center}
+\end{frame}
+%-------------------------------------------------------------------
+
+\end{document} 
+
+%-------------------------------------------------------------------
+
+%\transdissolve[duration=0.25]
+%
+%\begin{exampleblock}{Avantages}
+%\end{exampleblock}
+%
+%\begin{alertblock}{Inconvénients}
+%\end{alertblock}
