@@ -32,7 +32,7 @@
 \usepackage{graphicx}
 \usepackage[utf8x]{inputenc}
 %\usepackage[T1]{fontenc}
-\usepackage[frenchb]{babel} 
+\usepackage[french]{babel}
 %\usepackage[all]{xy}
 %\usepackage{multirow}
 %\usepackage{lmodern}
@@ -306,18 +306,18 @@ ADD_EXECUTABLE(hello main.c hello.c)
 \begin{frame}{Création du CMakeLists.txt}
   \begin{exampleblock}{Objectifs}
     \begin{itemize}
-    \item Compiler une bibliothèque (library)
-    \item Compiler des binaires
-    \item Compiler des tests unitaires
+    \item Compiler un binaire
+    \item Compiler un test unitaire
     \end{itemize}
   \end{exampleblock}
   \pause
   \begin{exampleblock}{}
     \begin{itemize}
-    \item Installer la bibliothèque et les binaires
-    \item Installer les fichiers de configuration
-    \item Générer la documentation
-    \item Ajouter des options de compilation
+    \item Compiler une bibliothèque (library)
+    \item[+] Installer la bibliothèque et le binaire
+    %\item Installer les fichiers de configuration
+    \item[+] Ajouter des options de compilation
+    \item[+] Générer la documentation
     \end{itemize}
   \end{exampleblock}
 \end{frame}
@@ -341,14 +341,14 @@ ADD_EXECUTABLE(hello main.c hello.c)
   \end{block}
 \end{frame}
 
-\begin{frame}{Consignes}
+\begin{frame}[fragile]{Consignes}
 
   \begin{exampleblock}{Créer un projet}
     \begin{itemize}
-    \item Cloner le dépôt 
-    \url{https://github.com/lbaudouin/cmake-demo.git}
-    \item Définir la version minimal de cmake (ici 2.6)
-	\item Définir un nouveau projet \og module \fg
+    \item Ouvrir le dossier \verb?example?
+    \item Créer un fichier \verb?CMakeLists.txt?
+    \item Définir la version minimal de cmake (ex: 2.8)
+	\item Définir un nouveau projet \og hello \fg
     \end{itemize}
   \end{exampleblock}
 
@@ -363,13 +363,41 @@ ADD_EXECUTABLE(hello main.c hello.c)
     \begin{itemize}
     \item Ajouter un exécutable :\linebreak
       \textcolor{cyan}{\verb?ADD\_EXECUTABLE( exec\_name sources )?}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Tests}
+    \begin{itemize}
+    \item Activer les tests :\linebreak
+      \textcolor{cyan}{\verb?ENABLE\_TESTING()?}
+    \item Ajouter un test :\linebreak
+      \textcolor{cyan}{\verb?ADD\_TEST( test\_name exec\_name) ?}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Consignes}
+  \begin{exampleblock}{Créer les cibles}
+    \begin{itemize}
+    \item Générer un exécutable \verb?hello?
+    \item Générer un test \verb?test_hello?
+    \item Compiler
+    \item Lancer le programme
+    \item Lancer le test
+    \end{itemize}
+  \end{exampleblock}
+\end{frame}
+
+
+\begin{frame}[fragile]{Fonctions}
+  \begin{block}{Créer des cibles}
+    \begin{itemize}
     \item Ajouter une bibliothèque :\linebreak
       \textcolor{cyan}{\verb?ADD\_LIBRARY( lib\_name [static|shared] sources )?}
     \item Linker une cible avec une bibliothèque :\linebreak
       \textcolor{cyan}{\verb?TARGET\_LINK\_LIBRARIES( exec\_name libraries )?}%\linebreak
-      %Exemple : \textcolor{cyan}{\verb?TARGET\_LINK\_LIBRARIES( MyExecutable \$\{PROJECT\_NAME\})?}
-    \item Utiliser un dossier contenant des bibliothèques :\linebreak
-      \textcolor{cyan}{\verb?LINK\_DIRECTORIES( folder )?}
+    %\item Utiliser un dossier contenant des bibliothèques :\linebreak
+      %\textcolor{cyan}{\verb?LINK\_DIRECTORIES( folder )?}
     \end{itemize}
   \end{block}
 
@@ -378,22 +406,32 @@ ADD_EXECUTABLE(hello main.c hello.c)
     \item Inclure un sous-dossier :\linebreak
       \textcolor{cyan}{\verb?ADD\_SUBDIRECTORY( folder )?}
     \end{itemize}
+  \end{block}  
+
+  \begin{block}{Dossier d'en-tête}
+    \begin{itemize}
+    \item Ajouter un dossier d'en-tête:\linebreak
+      \textcolor{cyan}{\verb?INCLUDE\_DIRECTORIES( folder )?}
+    \end{itemize}
   \end{block}
+  
 \end{frame}
 
-\begin{frame}{Consignes}
+\begin{frame}[fragile]{Consignes}
   \begin{exampleblock}{Créer les cibles}
     \begin{itemize}
-    \item Ajouter les sources à une variable en utilisant la fonction FILE
-    \item Créer la bibliothèque
-    \item Créer le binaire \og demo \fg
-    \item Créer les tests unitaires
+    \item Créer les dossier \verb?bin?, \verb?lib? et \verb?test?
+    \item Répartir les fichiers
+    %\item Ajouter les sources à une variable en utilisant la fonction FILE
+    \item Créer la bibliothèque \verb?hello?
+    \item Créer le binaire \verb?hello?
+    \item Créer le test unitaire
     \end{itemize}
   \end{exampleblock}
 \end{frame}
 
 \subsection{Chercher une bibliothèque}
-\begin{frame}[fragile]{Fonctions}
+\begin{frame}[fragile]{Dépendances}
   \begin{block}{Utiliser une bibliothèque}
     \begin{itemize}
     \item Chercher une bibliothèque :\linebreak
@@ -411,7 +449,7 @@ ADD_EXECUTABLE(hello main.c hello.c)
   \end{block}
 \end{frame}
 
-\begin{frame}[fragile]{Fonctions}
+\begin{frame}[fragile]{Dépendances}
   \begin{block}{Utiliser une bibliothèque}
     \begin{itemize}
     \item \verb?XXX_FOUND? :\\
@@ -438,7 +476,7 @@ ADD_EXECUTABLE(hello main.c hello.c)
 %XXX_FIND_VERSION_COUNT = number of version components, 0 to 4
 %XXX_FIND_VERSION_EXACT = true if EXACT option was given
 
-\begin{frame}[fragile]{Fonctions}
+\begin{frame}[fragile]{Dépendances}
   \begin{block}{Utiliser une bibliothèque avec un fichier .pc}
 \begin{verbatim}
   SET(XXX_FOUND FALSE)
