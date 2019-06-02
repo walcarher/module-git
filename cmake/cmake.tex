@@ -205,7 +205,7 @@ ADD_EXECUTABLE(hello main.c hello.c)
   \end{block}
   
   \begin{block}{Compiler et lancer le programme}
-    \textcolor{commandcolor}{\verb?mkdir build \&\& cd build?}\linebreak
+    \textcolor{commandcolor}{\verb?mkdir build; cd build?}\linebreak
     \textcolor{commandcolor}{\verb?cmake ..?}\linebreak
     \textcolor{commandcolor}{\verb?make?}\linebreak
     \textcolor{commandcolor}{\verb?./hello?}
@@ -237,18 +237,14 @@ ADD_EXECUTABLE(hello main.c hello.c)
   \end{block}
 \end{frame}
 
-\section{CMake pour un projet complexe}
+\section{CMake pour un projet complet}
 \subsection{}
 
 \begin{frame}[fragile]{Utilisation de CMake}
 
   \begin{block}{Cloner le dép\^ot suivant}
-    \url{https://gitlab.com/lbaudouin/empty_library.git}
+    \url{https://gitlab.com/lbaudouin/libempty.git}
   \end{block}
-
-  \begin{exampleblock}{Objectif}
-    Générer le fichier \textit{CMakeLists.txt} pour le projet
-  \end{exampleblock}
 
 \end{frame}
 
@@ -264,7 +260,7 @@ ADD_EXECUTABLE(hello main.c hello.c)
 |   |-- Doxyfile.in          < Règle de la documentation
 |   |-- style.css            < Style pour la documentation
 |-- include                  
-|   |-- my_class.h           < Fichiers includes
+|   |-- my_class.h           < Fichiers d'en-tête
 |-- LibraryConfig.cmake.in   < Fichier de configuration pour cmake
 |-- Library.pc.in            < Fichier de configuration pour pkg-config
 |-- LICENSE                  < Licence du projet
